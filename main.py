@@ -25,16 +25,22 @@ def main():
     l2 = 3
 
     costs = []
-    T = np.linspace(200,2000,8)
+    T = 4*np.logspace(2,3,10)
     for t in T:
-
         t = t-t%4
-        omega_schedules, delta_scedules, cost = schedule_optimizer(omega_max, delta_max, l1, l2, t, reg)
-        costs.append(cost)
+        cost_intermediate = []
+        for l1 in [2,4]:
+            for l2 in [4,6,8]:
+
+                omega_schedules, delta_scedules, cost = schedule_optimizer(omega_max, delta_max, l1, l2, t, reg)
+                cost_intermediate.append(cost)
+        costs.append(min(cost_intermediate))
 
     plt.figure()
     plt.plot(T/1000,costs)
     plt.xlabel(r'total time evolution [$\mu$ s]')
+    plt.xscale('log')
+    plt.yscale('log')
     plt.savefig('cost_vs_time.png')
 
 if __name__ == '__main__':
